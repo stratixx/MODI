@@ -24,7 +24,7 @@ set_param(model_dnc,'Solver','ode45',...
                 'SaveState','on', 'SaveOutput','on');
 
 for k=1:1:length(Tp_vector)
-   Tp = Tp_vector(k+2);
+   Tp = Tp_vector(k);
    dnc_data = sim(model_dnc_name, config_dnc);
    dnd_data = sim(model_dnd_name, config_dnd);
    
@@ -40,12 +40,11 @@ for k=1:1:length(Tp_vector)
    xlabel('Czas');
    ylabel('WartoúÊ');
    hold on; box on; grid on;
-   title('Odpowiedü skokowa modeli');
+   title(strcat('Odpowiedü skokowa modeli, Tp = ', num2str(Tp), '[s]') );
    plot(dnc_t, dnc_y);
    stairs(dnd_t, dnd_y);
    legend('Model ciπg≥y', 'Model dyskretny');
-   
-   
-   
-   break;
+   print(strcat('img/Tp_',strrep(num2str(Tp),'.','_') ),'-dpng');
+   hold off;
+   close all;
 end
