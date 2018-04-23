@@ -1,7 +1,7 @@
 run('../utils/init.m');
 load('../dane_poczatkowe.mat');
 
-tkonc = 99;
+tkonc = 69;
 Tp=1;
 U_vector = [ -0.9 -0.5 -0.2 0.6 ];
 
@@ -59,6 +59,8 @@ for k=1:1:length(U_vector)
        dnd_t = dnd_t(shift:end,:) - dnd_t(shift,1);
        dnd_u = dnd_u(shift:end,:);
        dnd_y = dnd_y(shift:end,:);
+       
+       transmit_Kstatic = (dzd_u-U)*Kstatic(U)+fun_y_u(U);
 
        figure(k);
        xlabel('Czas');
@@ -68,9 +70,10 @@ for k=1:1:length(U_vector)
        stairs(dzd_t, dzd_y);
        stairs(dnd_t, dnd_y);
        stairs(dnd_t, dnd_u);
-       legend('Model zlinearyzowany', 'Model nieliniowy', 'Sygna³ steruj¹cy');
+       plot(dzd_t, transmit_Kstatic, '--');
+       legend('Model zlinearyzowany', 'Model nieliniowy', 'Sygna³ steruj¹cy', 'Wzmocnienie statyczne transmitancji');
        num = num2str((k-1)*((size(step_matrix)*[1;0]))+(kStep));
-       print(strcat('img/', num, 'step_', num2str(kStep), '_U_',strrep(num2str(U),'.','_') ),'-dpng');
+       print(strcat( 'img/', num, 'step_', num2str(kStep), '_U_',strrep(num2str(U),'.','_') ),'-dpng');
        hold off;
        close all
        %break;
