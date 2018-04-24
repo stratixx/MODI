@@ -12,7 +12,7 @@ for k=1:1:length(Uvector)
 
     y_u = fun_y_u( u );
     y_u_U = fun_y_u_U( u, U );    
-    wsp = mean(100*abs((y_u-y_u_U)/y_u));
+    wsp = mean(100*abs((y_u-y_u_U)/y_u)); % wspó³czynnik b³êdu linearyzacji
 
     figure(1);
     grid on; box on; hold on;

@@ -16,9 +16,10 @@ G_z = C*inv(z*I - A)*B + D;
 
 % wyznaczenie transmitancji G(z) w zale¿noœci od punktu U
 clear
-load('dane_poczatkowe.mat');
+load('../dane_poczatkowe.mat');
 %z=1;
 %U=2;
-syms z U
+syms z U Tp
 
 G_z = (K*Tp^2*(4*a4*U^3 + 3*a3*U^2 + 2*a2*U + a1))/(T1*T2 - T1*Tp - T2*Tp + Tp^2 - 2*T1*T2*z + T1*Tp*z + T2*Tp*z + T1*T2*z^2)
+display(G_z)
