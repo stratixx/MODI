@@ -8,17 +8,17 @@ daneDynWerY = daneDynWer(:,2);
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-Nmax = 7;
+Nmax = 15;
 Na=7;
 Nb=Na;
 N=0;
 minErrVerify = 100000.0;
 minErrVerifyN = 1000;
-minErrDelta = 5;
+minErrDelta = 1000;
 errArray = zeros(Nmax,3);
 
 for Na=1:1:Nmax
-    Nb=Na;
+    Nb=Na
     errArray(Na, 1) = Na;
     
     Mlearn = ones(dataLength-max([Na,Nb]), Na+Nb);
@@ -32,8 +32,14 @@ for Na=1:1:Nmax
     end
     
     Wlearn = Mlearn\daneDynUczY(max([Na,Nb]+1):end);
-    YlearnCalc = Mlearn*Wlearn;
-    errLearn = (sum(power( daneDynUczY(max([Na,Nb]+1):end)-YlearnCalc, 2 )));
+    
+    YlearnCalc = daneDynUczY';
+    
+    for k=Na+1:1:length(YlearnCalc)
+       YlearnCalc(k)= [ flip(daneDynUczU(k-Na:k-1)'), flip(YlearnCalc(k-Na:k-1)) ] * Wlearn; 
+    end
+    
+    errLearn = (sum(power( daneDynUczY(max([Na,Nb]+1):end)-YlearnCalc(1+Na:end)', 2 )));
     errArray(Na, 2) = errLearn;
     
     Mverif = ones(dataLength-max([Na,Nb]), Na+Nb);
@@ -45,16 +51,21 @@ for Na=1:1:Nmax
         Mverif(:,Na+n+1) = daneDynWerY( (max([Na,Nb])-n):(end-n-1) );
     end
     
-    Wverif = Mverif\daneDynWerY(max([Na,Nb]+1):end);
-    YverifCalc = Mverif*Wlearn;
-    errVerif = (sum(power( daneDynWerY(max([Na,Nb]+1):end)-YverifCalc, 2 )));
+    %Wverif = Mverif\daneDynWerY(max([Na,Nb]+1):end);
+    YverifCalc = daneDynWerY';
+    
+    for k=Na+1:1:length(YverifCalc)
+       YverifCalc(k)= [ flip(daneDynUczU(k-Na:k-1)'), flip(YverifCalc(k-Na:k-1)) ] * Wlearn; 
+    end
+    
+    errVerif = (sum(power( daneDynWerY(max([Na,Nb]+1):end)-YverifCalc(1+Na:end)', 2 )));
     errArray(Na, 3) = errVerif;
     
     if errVerif<(minErrVerify-minErrDelta)
         minErrVerify = errVerif;
         minErrVerifyN = Na;
     end
-    continue
+    %continue
     figure(1)
     hold on; grid on; box on;
     plot( daneDynUczY, '.');
@@ -63,7 +74,7 @@ for Na=1:1:Nmax
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane ucz¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/bc/noRecur/learn/learn_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
+    print(strcat('img/bc/recur/learn/learn_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
     close 1;
     
     figure(2)
@@ -74,7 +85,7 @@ for Na=1:1:Nmax
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane weryfikuj¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/bc/noRecur/verif/verif_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
+    print(strcat('img/bc/recur/verif/verif_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
     close 2;
 end
 
