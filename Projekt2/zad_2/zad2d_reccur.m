@@ -8,7 +8,7 @@ daneDynWerY = daneDynWer(:,2);
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-maxRzad=7;
+maxRzad=4;
 maxStopien=7;
 
 minErrVerify = 100000.0;
@@ -36,37 +36,55 @@ for stopien=1:1:maxStopien
     end    
     
     Wlearn = Mlearn\daneDynUczY(rzad+1:end);
-    YlearnCalc = Mlearn*Wlearn;
-    errLearn = (sum(power( daneDynUczY(rzad+1:end)-YlearnCalc, 2 )));
+    %YlearnCalc = Mlearn*Wlearn;
+    %errLearn = (sum(power( daneDynUczY(rzad+1:end)-YlearnCalc, 2 )));
     
     
-%     
-%     YlearnCalc = daneDynUczY';
-%     
-%     for k=Na+1:1:length(YlearnCalc)
-%        YlearnCalc(k)= [ flip(daneDynUczU(k-Na:k-1)'), flip(YlearnCalc(k-Na:k-1)) ] * Wlearn; 
-%     end
-%     
-%     errLearn = (sum(power( daneDynUczY(max([Na,Nb]+1):end)-YlearnCalc(1+Na:end)', 2 )));
     
+    YlearnCalc = daneDynUczY';
+    uTemp = zeros(1,rzad*stopien);
+    yTemp = zeros(1,rzad*stopien);
     
-    errArray((rzad-1)*maxStopien+stopien, 3) = errLearn;    
-    
-    Mverif = ones(dataLength-rzad, 2*(rzad*stopien));
-    for nr=1:1:rzad
-        for ns=1:1:stopien
-            Mverif(:,(nr-1)*stopien+ns) = power(daneDynWerU( (rzad-nr+1):(end-nr) ),ns);            
+    for k=rzad+1:1:length(YlearnCalc)
+        for nr=1:1:rzad
+            for ns=1:1:stopien
+                uTemp(:,(nr-1)*stopien+ns) = power(daneDynUczU( k-rzad ),ns);            
+            end
         end
+    
+        for nr=1:1:rzad
+            for ns=1:1:stopien
+                yTemp(:,(nr-1)*stopien+ns) = power(YlearnCalc( k-rzad ),ns);      
+            end
+        end 
+   
+       YlearnCalc(k)= [ (uTemp), (yTemp) ] * Wlearn; 
     end
     
-    for nr=1:1:rzad
-        for ns=1:1:stopien
-            Mverif(:,stopien*rzad+(nr-1)*stopien+ns) = power(daneDynWerY( (rzad-nr+1):(end-nr) ),ns);      
-        end
-    end  
+    errLearn = (sum(power( daneDynUczY(rzad+1:end)-YlearnCalc(rzad+1:end)', 2 )));    
+    errArray((rzad-1)*maxStopien+stopien, 3) = errLearn;    
     
-    YverifCalc = Mverif*Wlearn;
-    errVerif = (sum(power( daneDynWerY(rzad+1:end)-YverifCalc, 2 )));    
+    YverifCalc = daneDynWerY';
+    uTemp = zeros(1,rzad*stopien);
+    yTemp = zeros(1,rzad*stopien);
+    
+    for k=rzad+1:1:length(YverifCalc)
+        for nr=1:1:rzad
+            for ns=1:1:stopien
+                uTemp(:,(nr-1)*stopien+ns) = power(daneDynWerU( k-rzad ),ns);            
+            end
+        end
+    
+        for nr=1:1:rzad
+            for ns=1:1:stopien
+                yTemp(:,(nr-1)*stopien+ns) = power(YverifCalc( k-rzad ),ns);      
+            end
+        end 
+   
+       YverifCalc(k)= [ (uTemp), (yTemp) ] * Wlearn; 
+    end
+    
+    errVerif = (sum(power( daneDynWerY(rzad+1:end)-YverifCalc(rzad+1:end)', 2 )));      
     errArray((rzad-1)*maxStopien+stopien, 4) = errVerif;
     
 %     if errVerif<(minErrVerify-minErrDelta)
@@ -82,7 +100,7 @@ for stopien=1:1:maxStopien
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane ucz¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/de/noRecur/learn/learn_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
+    print(strcat('img/de/recur/learn/learn_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
     close 1;
     
     figure(2)
@@ -93,7 +111,7 @@ for stopien=1:1:maxStopien
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane weryfikuj¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/de/noRecur/verif/verif_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
+    print(strcat('img/de/recur/verif/verif_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
     close 2;
     end
 end
