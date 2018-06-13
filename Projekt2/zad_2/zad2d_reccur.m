@@ -14,16 +14,16 @@ daneDynWerY = daneDynWer(:,2);
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-maxRzad=7;
-maxStopien=7;
+maxRzad=2;
+maxStopien=4;
 
 minErrVerify = 100000.0;
 minErrVerifyN = 1000;
 minErrDelta = 0.2;
 errArray = zeros(maxRzad*maxStopien,4);
 
-for stopien=1:1:maxStopien
-    for rzad=1:1:maxRzad
+for stopien=4:1:maxStopien
+    for rzad=2:1:maxRzad
         
     errArray((rzad-1)*maxStopien+stopien, 1) = stopien;
     errArray((rzad-1)*maxStopien+stopien, 2) = rzad;
