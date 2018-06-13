@@ -5,10 +5,16 @@ daneDynUczU = daneDynUcz(:,1);
 daneDynUczY = daneDynUcz(:,2);
 daneDynWerU = daneDynWer(:,1);
 daneDynWerY = daneDynWer(:,2);
+
+
+%     daneDynWerU=[1;2;3;4;5;6;7;8;9;10];
+%     daneDynWerY=[1;2;3;4;5;6;7;8;9;10];
+%     daneDynUczU=[1;2;3;4;5;6;7;8;9;10];
+%     daneDynUczY=[1;2;3;4;5;6;7;8;9;10];
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-maxRzad=4;
+maxRzad=7;
 maxStopien=7;
 
 minErrVerify = 100000.0;
@@ -21,7 +27,7 @@ for stopien=1:1:maxStopien
         
     errArray((rzad-1)*maxStopien+stopien, 1) = stopien;
     errArray((rzad-1)*maxStopien+stopien, 2) = rzad;
-    
+        
     Mlearn = ones(dataLength-rzad, 2*(rzad*stopien));
     for nr=1:1:rzad
         for ns=1:1:stopien
@@ -48,13 +54,13 @@ for stopien=1:1:maxStopien
     for k=rzad+1:1:length(YlearnCalc)
         for nr=1:1:rzad
             for ns=1:1:stopien
-                uTemp(:,(nr-1)*stopien+ns) = power(daneDynUczU( k-rzad ),ns);            
+                uTemp(:,(nr-1)*stopien+ns) = power(daneDynUczU( k-nr ),ns) ;           
             end
         end
     
         for nr=1:1:rzad
             for ns=1:1:stopien
-                yTemp(:,(nr-1)*stopien+ns) = power(YlearnCalc( k-rzad ),ns);      
+                yTemp(:,(nr-1)*stopien+ns) = power(YlearnCalc( k-nr ),ns);      
             end
         end 
    
@@ -67,17 +73,16 @@ for stopien=1:1:maxStopien
     YverifCalc = daneDynWerY';
     uTemp = zeros(1,rzad*stopien);
     yTemp = zeros(1,rzad*stopien);
-    
     for k=rzad+1:1:length(YverifCalc)
         for nr=1:1:rzad
             for ns=1:1:stopien
-                uTemp(:,(nr-1)*stopien+ns) = power(daneDynWerU( k-rzad ),ns);            
+                uTemp(:,(nr-1)*stopien+ns) = power(daneDynWerU( k-nr ),ns);            
             end
         end
     
         for nr=1:1:rzad
             for ns=1:1:stopien
-                yTemp(:,(nr-1)*stopien+ns) = power(YverifCalc( k-rzad ),ns);      
+                yTemp(:,(nr-1)*stopien+ns) = power(YverifCalc( k-nr ),ns);      
             end
         end 
    
