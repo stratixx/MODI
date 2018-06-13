@@ -8,8 +8,8 @@ daneDynWerY = daneDynWer(:,2);
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-maxRzad=7;
-maxStopien=7;
+maxRzad=4;
+maxStopien=4;
 
 minErrVerify = 100000.0;
 minErrVerifyN = 1000;
@@ -63,26 +63,29 @@ for stopien=1:1:maxStopien
 %     end
     
     figure(1)
+    
+    subplot(2,1,1)
     hold on; grid on; box on;
     plot( daneDynUczY, '.');
     plot( YlearnCalc);
-    title(strcat('Model dynamiczny na tle zbioru danych ucz¹cych, rzad=',num2str(rzad),', stopien=',num2str(stopien) ,' err=',num2str(errLearn)));
-    xlabel('Próbki');
+    title(strcat('Model na tle zbioru danych ucz¹cych, rzad=',num2str(rzad),', stopien=',num2str(stopien) ,' err=',num2str(errLearn)));
+    %xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane ucz¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/de/noRecur/learn/learn_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
-    close 1;
+    %print(strcat('img/de/noRecur/learn/learn_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
+    %close 1;
     
-    figure(2)
+    %figure(2)
+    subplot(2,1,2);
     hold on; grid on; box on;
     plot( daneDynWerY, '.');
     plot( YverifCalc);
-    title(strcat('Model dynamiczny na tle zbioru danych weryfikuj¹cych, rzad=',num2str(rzad),', stopien=',num2str(stopien) ,' err=',num2str(errVerif)));
+    title(strcat('Model na tle zbioru danych weryfikuj¹cych, rzad=',num2str(rzad),', stopien=',num2str(stopien) ,' err=',num2str(errVerif)));
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane weryfikuj¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/de/noRecur/verif/verif_r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
-    close 2;
+    print(strcat('img/de/noRecur/r_',num2str(rzad),'_s_',num2str(stopien)), '-dpng');
+    close 1;
     end
 end
 

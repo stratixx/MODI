@@ -8,7 +8,7 @@ daneDynWerY = daneDynWer(:,2);
 dataLength = length(daneDynUczU);
 clear daneDynUcz daneDynWer
 
-Nmax = 15;
+Nmax = 5;
 Na=7;
 Nb=Na;
 N=0;
@@ -67,17 +67,20 @@ for Na=1:1:Nmax
     end
     %continue
     figure(1)
+    
+    subplot(2,1,1)
     hold on; grid on; box on;
     plot( daneDynUczY, '.');
     plot( YlearnCalc);
     title(strcat('Model dynamiczny na tle zbioru danych ucz¹cych, Nb=Na=',num2str(Na),', err=',num2str(errLearn)));
-    xlabel('Próbki');
+    %xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane ucz¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/bc/recur/learn/learn_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
-    close 1;
+    %print(strcat('img/bc/recur/learn/learn_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
+    %close 1;
     
-    figure(2)
+    %figure(2)
+    subplot(2,1,2)
     hold on; grid on; box on;
     plot( daneDynWerY, '.');
     plot( YverifCalc);
@@ -85,8 +88,8 @@ for Na=1:1:Nmax
     xlabel('Próbki');
     ylabel('Sygna³ wyjœciowy y');
     legend('Dane weryfikuj¹ce','Wyjœcie modelu','location','southeast')
-    print(strcat('img/bc/recur/verif/verif_Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
-    close 2;
+    print(strcat('img/bc/recur/Nb_',num2str(Nb),'_Na_',num2str(Na)), '-dpng');
+    close 1;
 end
 
 errArray

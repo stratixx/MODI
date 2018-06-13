@@ -5,13 +5,13 @@ Ulearn = dataLearn(:,1);
 Yverif = dataVerif(:,2);
 Uverif = dataVerif(:,1);
 
-Nmax = 10;
+Nmax = 3;
 minErrVerify = 100000.0;
 minErrVerifyN = 1000;
-minErrDelta = 0.01;
+minErrDelta = 1;
 errArray = zeros(Nmax+1,3);
 
-for N=0:1:Nmax
+for N=3:1:Nmax
     errArray(N+1, 1) = N;
     
     Mlearn = ones(dataLength/2, N+1);
@@ -20,7 +20,7 @@ for N=0:1:Nmax
     end
     Wlearn = Mlearn\Ylearn;
     YlearnCalc = Mlearn*Wlearn;
-    errLearn = sqrt(sum(power( Ylearn-YlearnCalc, 2 )));
+    errLearn = (sum(power( Ylearn-YlearnCalc, 2 )));
     errArray(N+1, 2) = errLearn;
 
     Mverif = ones(dataLength/2, N+1);
@@ -28,7 +28,7 @@ for N=0:1:Nmax
         Mverif(:,n+1) = power(Uverif,n);
     end
     YverifCalc = Mverif*Wlearn;
-    errVerif = sqrt(sum(power( Yverif-YverifCalc, 2 )));
+    errVerif = (sum(power( Yverif-YverifCalc, 2 )));
     errArray(N+1, 3) = errVerif;
     
     if errVerif<(minErrVerify-minErrDelta)
@@ -37,24 +37,27 @@ for N=0:1:Nmax
     end
         
     figure(1)
+    
+    subplot(2,1,1);
     hold on; grid on; box on;
     plot( Ulearn, Ylearn, '.');
     plot( Ulearn, YlearnCalc);
-    title(strcat('Model na tle zbioru danych ucz¹cych, N=',num2str(N),', err=',num2str(errLearn)));
-    xlabel('Sygna³ wejœciowy u');
+    %xlabel('Sygna³ wejœciowy u');
     ylabel('Sygna³ wyjœciowy y');
-    %print(strcat('img/learn/learn_N_',num2str(N)), '-dpng');
-    close 1;
+    title(strcat('Model na tle danych uczacych N=',num2str(N),', err=',num2str(errLearn)));
+    legend('y_L_E_A_R_N','y_M_O_D_E_L');
 
-    figure(2)
+    subplot(2,1,2);
     hold on; grid on; box on;
     plot( Uverif, Yverif, '.');
     plot( Uverif, YverifCalc);
-    title(strcat('Model na tle zbioru danych weryfikuj¹cych, N=',num2str(N),', err=',num2str(errVerif)));
     xlabel('Sygna³ wejœciowy u');
     ylabel('Sygna³ wyjœciowy y');
-    %print(strcat('img/verif/verif_N_',num2str(N)), '-dpng');
-    close 2;
+    legend('y_V_E_R_I_F','y_M_O_D_E_L');
+    
+    title(strcat('Model na tle danych weryfikuj¹cych N=',num2str(N),', err=',num2str(errLearn)));
+    %print(strcat('img/N_',num2str(N)), '-dpng');
+    close 1;
 
 end
 

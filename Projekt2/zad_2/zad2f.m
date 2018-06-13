@@ -22,14 +22,17 @@ dataReaded = sortrows(dlmread('../danestat43.txt'));
 uVect=dataReaded(:,1);
 y_mod = zeros(size(uVect));
 
+% pêtla obliczaj¹ca kolejne wartoœci y(u)
 for ku=1:1:length(uVect)
+    % kolejna wartoœæ u
     u=uVect(ku);
+    % wskaŸnik na funkcjê nieliniow¹
     y_fun = @(y) -y...
       + wsp_u(1)*u + wsp_u(2)*u^2 + wsp_u(3)*u^3 + wsp_u(4)*u^4 ...
       + wsp_u(5)*u + wsp_u(6)*u^2 + wsp_u(7)*u^3 + wsp_u(8)*u^4 ...
       + wsp_y(1)*y + wsp_y(2)*y^2 + wsp_y(3)*y^3 + wsp_y(4)*y^4 ...
       + wsp_y(5)*y + wsp_y(6)*y^2 + wsp_y(7)*y^3 + wsp_y(8)*y^4 ; 
-
+    % rozwi¹zanie funkcji nieliniowej
     y_mod(ku) = fsolve(y_fun,0);
 end
 
@@ -40,5 +43,7 @@ plot( dataReaded(:,1), dataReaded(:,2), '.');
 plot( dataReaded(:,1), y_mod);
 xlabel('Sygna³ steruj¹cy u');
 ylabel('Sygna³ wyjœciowy y');
-title(strcat('Nieliniowy model statyczny na tle danych statycznych, err=',num2str(err)));
+title(strcat('Charakterysyka statyczna modelu na tle danych statycznych, err=',num2str(err)));
 legend('y(u)','y_m_o_d(u)');
+print('img/zad2_f_char_stat_mod_dyn_nielin','-dpng');
+close 1;
